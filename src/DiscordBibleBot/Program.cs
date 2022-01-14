@@ -1,4 +1,6 @@
-﻿using dotenv.net;
+﻿using System.Text;
+using CSBible;
+using dotenv.net;
 using DSharpPlus;
 using Utils;
 
@@ -11,6 +13,8 @@ var client = new DiscordClient(new DiscordConfiguration()
     Intents = DiscordIntents.AllUnprivileged
 });
 
+string PREFIX = DotEnv.Read()["PREFIX"];
+
 client.MessageCreated += async (client, args) =>
 {
     if (args.Author.IsCurrent)
@@ -18,18 +22,58 @@ client.MessageCreated += async (client, args) =>
         return;
     }
 
-    InputParser inputParser = new(args.Message.Content, DotEnv.Read()["PREFIX"]);
+    InputParser inputParser = new(args.Message.Content, PREFIX);
 
     try
     {
-        var p = inputParser.Parse();
+        var biblicalIndex = inputParser.Parse();
 
-        await client.SendMessageAsync(args.Channel, String.Join(' ', inputParser.Parse()));
+        if (biblicalIndex.VerseRange is null)
+        {
+            var response = Bible.GetVerse(
+                biblicalIndex.CSBibleBookName,
+                biblicalIndex.Chapter,
+                biblicalIndex.Verse
+            );
+
+            await client.SendMessageAsync(args.Channel, $"{response} [{biblicalIndex.ToString()}]");
+            return;
+        }
+        else
+        {
+            StringBuilder sb = new();
+
+            for (int verseNumber = biblicalIndex.Verse; verseNumber <= biblicalIndex.VerseRange; verseNumber++)
+            {
+                sb.Append(
+                    string.Join(string.Empty,
+                    verseNumber
+                        .ToString()
+                        .ToCharArray()
+                        .Select(x => SuperscriptNumbers.Get(x - '0'))
+                    )
+                );
+
+                sb.Append(Bible.GetVerse(
+                    biblicalIndex.CSBibleBookName,
+                    biblicalIndex.Chapter,
+                    verseNumber
+                ));
+
+                sb.Append(' ');
+            }
+
+            sb.Append($"[{biblicalIndex.ToString()}]");
+            await client.SendMessageAsync(args.Channel, sb.ToString());
+            return;
+        }
+
     }
     catch (Exception error)
     {
-        throw error;
-        // Console.Error.WriteLine(error.Message);
+        Console.Error.WriteLine(error.Message);
+        Console.Error.WriteLine("\t\t" + error.StackTrace);
+        Console.Error.WriteLine("\n");
     }
 
 };
