@@ -23,6 +23,14 @@ public class InputParserTest
     }
 
     [Fact]
+    public void InvalidBecauseWrongPrefix()
+    {
+        InputParser inputParser = new("!d hello world", "!b");
+
+        Assert.Throws<ArgumentException>(() => inputParser.Parse());
+    }
+
+    [Fact]
     public void ShouldPassStartsWithTheCorrectPrefix()
     {
         InputParser inputParser = new("!b John 1:2", "!b");
