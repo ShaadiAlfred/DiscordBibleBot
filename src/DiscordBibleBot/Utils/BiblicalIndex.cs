@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 namespace Utils;
 
 public class BiblicalIndex
@@ -13,5 +14,21 @@ public class BiblicalIndex
         this.Chapter = chapter;
         this.Verse = verse;
         this.VerseRange = verseRange;
+
+        this.Normalize();
+    }
+
+    private void Normalize()
+    {
+        if (char.IsDigit(Book[0]))
+        {
+            if (!char.IsWhiteSpace(Book[1]))
+            {
+                this.Book = Book[0] + " " + Book.Substring(1);
+                return;
+            }
+
+            this.Book = Regex.Replace(this.Book, @"\s\s+", " ");
+        }
     }
 }

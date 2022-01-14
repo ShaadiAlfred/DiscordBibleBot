@@ -62,4 +62,23 @@ public class InputParserTest
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Equal(4, parsedBiblicalIndex.VerseRange);
     }
+
+    [Fact]
+    public void ShouldNormalizeWhiteSpaces()
+    {
+        InputParser inputParser = new("!b   1John   1 : 2", "!b");
+        var parsedBiblicalIndex = inputParser.Parse();
+        Assert.Equal("1 John", parsedBiblicalIndex.Book);
+        Assert.Equal(1, parsedBiblicalIndex.Chapter);
+        Assert.Equal(2, parsedBiblicalIndex.Verse);
+        Assert.Null(parsedBiblicalIndex.VerseRange);
+
+
+        inputParser = new("!b  1   John 1  : 2 - 5  ", "!b");
+        parsedBiblicalIndex = inputParser.Parse();
+        Assert.Equal("1 John", parsedBiblicalIndex.Book);
+        Assert.Equal(1, parsedBiblicalIndex.Chapter);
+        Assert.Equal(2, parsedBiblicalIndex.Verse);
+        Assert.Equal(5, parsedBiblicalIndex.VerseRange);
+    }
 }
