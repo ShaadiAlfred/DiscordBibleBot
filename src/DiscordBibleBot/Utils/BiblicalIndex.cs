@@ -8,7 +8,7 @@ public class BiblicalIndex
     public int Verse { get; set; }
     public int? VerseRange { get; set; }
 
-    public BiblicalIndex(string book, int chapter, int verse, int? verseRange)
+    public BiblicalIndex(string book, int chapter, int verse, int? verseRange = null)
     {
         this.Book = book;
         this.Chapter = chapter;
@@ -30,5 +30,15 @@ public class BiblicalIndex
 
             this.Book = Regex.Replace(this.Book, @"\s\s+", " ");
         }
+    }
+
+    public override string ToString()
+    {
+        if (VerseRange is not null)
+        {
+            return $"{Book} {Chapter}:{Verse}-{VerseRange}";
+        }
+
+        return $"{Book} {Chapter}:{Verse}";
     }
 }
