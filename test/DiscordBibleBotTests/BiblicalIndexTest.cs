@@ -1,3 +1,4 @@
+using System;
 using Utils;
 using Xunit;
 
@@ -29,5 +30,33 @@ public class BiblicalIndexTest
 
         biblicalIndex = new BiblicalIndex("1 sAmUeL", 4, 5, 8);
         Assert.Equal("1 Samuel 4:5-8", biblicalIndex.ToString());
+    }
+
+    [Fact]
+    public void ShouldConvertToCSBibleBookEnum()
+    {
+        BiblicalIndex biblicalIndex = new BiblicalIndex("1 John", 1, 2);
+        Assert.Equal(CSBible.Book.First_John, biblicalIndex.CSBibleBookName);
+
+        biblicalIndex = new BiblicalIndex("2 John", 1, 1);
+        Assert.Equal(CSBible.Book.Second_John, biblicalIndex.CSBibleBookName);
+
+        biblicalIndex = new BiblicalIndex("3 John", 4, 5, 8);
+        Assert.Equal(CSBible.Book.Third_John, biblicalIndex.CSBibleBookName);
+
+        biblicalIndex = new BiblicalIndex("Song of Songs", 4, 5, 8);
+        Assert.Equal(CSBible.Book.SongofSolomon, biblicalIndex.CSBibleBookName);
+
+        biblicalIndex = new BiblicalIndex("Song of Solomon", 4, 5, 8);
+        Assert.Equal(CSBible.Book.SongofSolomon, biblicalIndex.CSBibleBookName);
+    }
+
+    [Fact]
+    public void ShouldFailBecauseBookDoesNotExist()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            BiblicalIndex biblicalIndex = new BiblicalIndex("Enoch", 1, 1);
+        });
     }
 }

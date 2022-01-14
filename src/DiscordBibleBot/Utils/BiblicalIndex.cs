@@ -7,7 +7,7 @@ namespace Utils;
 public class BiblicalIndex
 {
     public string Book { get; set; }
-    public CSBibleBook CSBibleBook { get; set; }
+    public CSBibleBook CSBibleBookName { get; set; }
     public int Chapter { get; set; }
     public int Verse { get; set; }
     public int? VerseRange { get; set; }
@@ -20,6 +20,7 @@ public class BiblicalIndex
         this.VerseRange = verseRange;
 
         this.Normalize();
+        this.SetCSBibleBook();
     }
 
     private void Normalize()
@@ -50,7 +51,50 @@ public class BiblicalIndex
 
     public void SetCSBibleBook()
     {
-        throw new NotImplementedException();
+        string csbibleBookName;
+
+        char firstCharacter = this.Book[0];
+        if (char.IsDigit(firstCharacter))
+        {
+            switch (firstCharacter)
+            {
+                case '1':
+                    csbibleBookName = "First_" + this.Book.Substring(2);
+                    break;
+
+                case '2':
+                    csbibleBookName = "Second_" + this.Book.Substring(2);
+                    break;
+
+                case '3':
+                    csbibleBookName = "Third_" + this.Book.Substring(2);
+                    break;
+
+                default:
+                    throw new ArgumentException("Can't find this book");
+            }
+        }
+        else
+        {
+            if (this.Book == "Song Of Solomon" || this.Book == "Song Of Songs")
+            {
+                csbibleBookName = "SongofSolomon";
+            }
+            else
+            {
+                csbibleBookName = this.Book;
+            }
+        }
+
+
+        try
+        {
+            this.CSBibleBookName = (CSBibleBook)Enum.Parse(typeof(CSBibleBook), csbibleBookName);
+        }
+        catch (ArgumentException)
+        {
+            throw new ArgumentException($"Can't find the book of '{Book}'");
+        }
     }
 
     public override string ToString()
