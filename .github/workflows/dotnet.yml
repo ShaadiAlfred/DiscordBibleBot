@@ -62,7 +62,7 @@ jobs:
             release_name="BibleDiscordBot-$tag-${{ matrix.target }}"
 
             # Build everything
-            dotnet publish -p:PublishSingleFile=true -p:UseAppHost=true --self-contained false --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+            dotnet publish -p:PublishSingleFile=true -p:UseAppHost=true --self-contained true --runtime "${{ matrix.target }}" -c Release -o "$release_name"
 
             # Pack files
             if [ "${{ matrix.target }}" == "win-x64" ]; then
@@ -81,7 +81,7 @@ jobs:
         - name: Publish
           uses: softprops/action-gh-release@v1
           with:
-            tag_name: ${{ steps.tag.outputs.release_tag }}
+            tag_name: "${{ steps.tag.outputs.release_tag }}-{{ matrix.kind }}"
             files: "BibleDiscordBot*"
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
