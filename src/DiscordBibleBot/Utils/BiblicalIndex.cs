@@ -1,20 +1,21 @@
 using System.Text;
 using System.Text.RegularExpressions;
+using Interfaces;
 using CSBibleBook = CSBible.Book;
 
 namespace Utils;
 
-public class BiblicalIndex
+public class BiblicalIndex : IBiblicalIndex<CSBibleBook>
 {
-    public string Book { get; set; }
-    public CSBibleBook CSBibleBookName { get; set; }
+    public string BookTitle { get; set; }
+    public CSBibleBook Book { get; set; }
     public int Chapter { get; set; }
-    public int Verse { get; set; }
+    public int? Verse { get; set; }
     public int? VerseRange { get; set; }
 
-    public BiblicalIndex(string book, int chapter, int verse, int? verseRange = null)
+    public BiblicalIndex(string book, int chapter, int? verse = null, int? verseRange = null)
     {
-        this.Book = book;
+        this.BookTitle = book;
         this.Chapter = chapter;
         this.Verse = verse;
         this.VerseRange = verseRange;
@@ -25,19 +26,19 @@ public class BiblicalIndex
 
     private void Normalize()
     {
-        if (char.IsDigit(Book[0]))
+        if (char.IsDigit(BookTitle[0]))
         {
-            if (!char.IsWhiteSpace(Book[1]))
+            if (!char.IsWhiteSpace(BookTitle[1]))
             {
-                this.Book = Book[0] + " " + Book.Substring(1);
+                this.BookTitle = BookTitle[0] + " " + BookTitle.Substring(1);
                 return;
             }
 
-            this.Book = Regex.Replace(this.Book, @"\s\s+", " ");
+            this.BookTitle = Regex.Replace(this.BookTitle, @"\s\s+", " ");
         }
 
-        this.Book = string.Join(' ',
-            this.Book
+        this.BookTitle = string.Join(' ',
+            this.BookTitle
             .ToLower()
             .Split(' ')
             .Select(str =>
@@ -53,21 +54,21 @@ public class BiblicalIndex
     {
         string csbibleBookName;
 
-        char firstCharacter = this.Book[0];
+        char firstCharacter = this.BookTitle[0];
         if (char.IsDigit(firstCharacter))
         {
             switch (firstCharacter)
             {
                 case '1':
-                    csbibleBookName = "First_" + this.Book.Substring(2);
+                    csbibleBookName = "First_" + this.BookTitle.Substring(2);
                     break;
 
                 case '2':
-                    csbibleBookName = "Second_" + this.Book.Substring(2);
+                    csbibleBookName = "Second_" + this.BookTitle.Substring(2);
                     break;
 
                 case '3':
-                    csbibleBookName = "Third_" + this.Book.Substring(2);
+                    csbibleBookName = "Third_" + this.BookTitle.Substring(2);
                     break;
 
                 default:
@@ -76,24 +77,31 @@ public class BiblicalIndex
         }
         else
         {
-            if (this.Book == "Song Of Solomon" || this.Book == "Song Of Songs")
+            switch (this.BookTitle)
             {
-                csbibleBookName = "SongofSolomon";
-            }
-            else
-            {
-                csbibleBookName = this.Book;
+                case "Song Of Solomon":
+                case "Song Of Songs":
+                    csbibleBookName = "SongofSolomon";
+                    break;
+
+                case "Psalm":
+                    csbibleBookName = "Psalms";
+                    break;
+
+                default:
+                    csbibleBookName = this.BookTitle;
+                    break;
             }
         }
 
 
         try
         {
-            this.CSBibleBookName = (CSBibleBook)Enum.Parse(typeof(CSBibleBook), csbibleBookName);
+            this.Book = (CSBibleBook)Enum.Parse(typeof(CSBibleBook), csbibleBookName);
         }
         catch (ArgumentException)
         {
-            throw new ArgumentException($"Can't find the book of '{Book}'");
+            throw new ArgumentException($"Can't find the book of '{BookTitle}'");
         }
     }
 
@@ -101,9 +109,14 @@ public class BiblicalIndex
     {
         if (VerseRange is not null)
         {
-            return $"{Book} {Chapter}:{Verse}-{VerseRange}";
+            return $"{BookTitle} {Chapter}:{Verse}-{VerseRange}";
         }
 
-        return $"{Book} {Chapter}:{Verse}";
+        if (Verse is null)
+        {
+            return $"{BookTitle} {Chapter}";
+        }
+
+        return $"{BookTitle} {Chapter}:{Verse}";
     }
 }

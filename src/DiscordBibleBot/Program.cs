@@ -1,10 +1,18 @@
-﻿using System.Text;
-using CSBible;
+﻿using BibleVersions;
 using dotenv.net;
 using DSharpPlus;
+using Interfaces;
 using Utils;
 
 DotEnv.Load(new DotEnvOptions(ignoreExceptions: false));
+
+CancellationTokenSource cts = new();
+
+Console.CancelKeyPress += (sender, args) =>
+{
+    args.Cancel = true;
+    cts.Cancel();
+};
 
 var client = new DiscordClient(new DiscordConfiguration()
 {
@@ -28,55 +36,26 @@ client.MessageCreated += async (client, args) =>
     {
         var biblicalIndex = inputParser.Parse();
 
-        if (biblicalIndex.VerseRange is null)
-        {
-            var response = Bible.GetVerse(
-                biblicalIndex.CSBibleBookName,
-                biblicalIndex.Chapter,
-                biblicalIndex.Verse
-            );
+        IBibleVersion<CSBible.Book> cSBibleKJV = new CSBibleKJV();
 
-            await client.SendMessageAsync(args.Channel, $"{response} [{biblicalIndex.ToString()}]");
-            return;
-        }
-        else
-        {
-            StringBuilder sb = new();
+        string passage = cSBibleKJV.GetPassage(biblicalIndex);
 
-            for (int verseNumber = biblicalIndex.Verse; verseNumber <= biblicalIndex.VerseRange; verseNumber++)
-            {
-                sb.Append(
-                    string.Join(string.Empty,
-                    verseNumber
-                        .ToString()
-                        .ToCharArray()
-                        .Select(x => SuperscriptNumbers.Get(x - '0'))
-                    )
-                );
-
-                sb.Append(Bible.GetVerse(
-                    biblicalIndex.CSBibleBookName,
-                    biblicalIndex.Chapter,
-                    verseNumber
-                ));
-
-                sb.Append(' ');
-            }
-
-            sb.Append($"[{biblicalIndex.ToString()}]");
-            await client.SendMessageAsync(args.Channel, sb.ToString());
-            return;
-        }
-
+        await client.SendMessageAsync(args.Channel, passage);
     }
     catch (Exception error)
     {
-        Console.Error.WriteLine(error.Message);
-        Console.Error.WriteLine("\t\t" + error.StackTrace);
-        Console.Error.WriteLine("\n");
+        Console.Error.WriteLine($"Error message:\t{error.Message}\nError type:\t{error.GetType()}");
+        Console.Error.WriteLine($"Stack trace:\t{error.StackTrace}");
+        Console.Error.WriteLine("---------------------------------");
+        return;
     }
-
 };
 
 await client.ConnectAsync();
-await Task.Delay(-1);
+
+while (!cts.IsCancellationRequested)
+    await Task.Delay(100);
+
+cts.Dispose();
+
+client.Dispose();

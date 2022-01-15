@@ -35,7 +35,7 @@ public class InputParserTest
     {
         InputParser inputParser = new("!b John 1:2", "!b");
         var parsedBiblicalIndex = inputParser.Parse();
-        Assert.Equal("John", parsedBiblicalIndex.Book);
+        Assert.Equal("John", parsedBiblicalIndex.BookTitle);
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Null(parsedBiblicalIndex.VerseRange);
@@ -43,21 +43,21 @@ public class InputParserTest
 
         inputParser = new("!b John 1:2-5", "!b");
         parsedBiblicalIndex = inputParser.Parse();
-        Assert.Equal("John", parsedBiblicalIndex.Book);
+        Assert.Equal("John", parsedBiblicalIndex.BookTitle);
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Equal(5, parsedBiblicalIndex.VerseRange);
 
         inputParser = new("!b 1 John 1:2", "!b");
         parsedBiblicalIndex = inputParser.Parse();
-        Assert.Equal("1 John", parsedBiblicalIndex.Book);
+        Assert.Equal("1 John", parsedBiblicalIndex.BookTitle);
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Null(parsedBiblicalIndex.VerseRange);
 
         inputParser = new("!b 1 John 1:2-4", "!b");
         parsedBiblicalIndex = inputParser.Parse();
-        Assert.Equal("1 John", parsedBiblicalIndex.Book);
+        Assert.Equal("1 John", parsedBiblicalIndex.BookTitle);
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Equal(4, parsedBiblicalIndex.VerseRange);
@@ -68,7 +68,7 @@ public class InputParserTest
     {
         InputParser inputParser = new("!b   1John   1 : 2", "!b");
         var parsedBiblicalIndex = inputParser.Parse();
-        Assert.Equal("1 John", parsedBiblicalIndex.Book);
+        Assert.Equal("1 John", parsedBiblicalIndex.BookTitle);
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Null(parsedBiblicalIndex.VerseRange);
@@ -76,7 +76,7 @@ public class InputParserTest
 
         inputParser = new("!b  1   John 1  : 2 - 5  ", "!b");
         parsedBiblicalIndex = inputParser.Parse();
-        Assert.Equal("1 John", parsedBiblicalIndex.Book);
+        Assert.Equal("1 John", parsedBiblicalIndex.BookTitle);
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Equal(5, parsedBiblicalIndex.VerseRange);

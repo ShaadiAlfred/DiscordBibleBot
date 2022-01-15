@@ -36,19 +36,22 @@ public class BiblicalIndexTest
     public void ShouldConvertToCSBibleBookEnum()
     {
         BiblicalIndex biblicalIndex = new BiblicalIndex("1 John", 1, 2);
-        Assert.Equal(CSBible.Book.First_John, biblicalIndex.CSBibleBookName);
+        Assert.Equal(CSBible.Book.First_John, biblicalIndex.Book);
 
         biblicalIndex = new BiblicalIndex("2 John", 1, 1);
-        Assert.Equal(CSBible.Book.Second_John, biblicalIndex.CSBibleBookName);
+        Assert.Equal(CSBible.Book.Second_John, biblicalIndex.Book);
 
         biblicalIndex = new BiblicalIndex("3 John", 4, 5, 8);
-        Assert.Equal(CSBible.Book.Third_John, biblicalIndex.CSBibleBookName);
+        Assert.Equal(CSBible.Book.Third_John, biblicalIndex.Book);
 
         biblicalIndex = new BiblicalIndex("Song of Songs", 4, 5, 8);
-        Assert.Equal(CSBible.Book.SongofSolomon, biblicalIndex.CSBibleBookName);
+        Assert.Equal(CSBible.Book.SongofSolomon, biblicalIndex.Book);
 
         biblicalIndex = new BiblicalIndex("Song of Solomon", 4, 5, 8);
-        Assert.Equal(CSBible.Book.SongofSolomon, biblicalIndex.CSBibleBookName);
+        Assert.Equal(CSBible.Book.SongofSolomon, biblicalIndex.Book);
+
+        biblicalIndex = new BiblicalIndex("Psalm", 1);
+        Assert.Equal(CSBible.Book.Psalms, biblicalIndex.Book);
     }
 
     [Fact]

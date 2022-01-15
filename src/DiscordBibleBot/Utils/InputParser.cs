@@ -28,7 +28,8 @@ public class InputParser
 
     private Dictionary<string, string> SplitInput()
     {
-        const string regex = @"(?<book>\d*\s*\w+)\s*(?<chapter>\d+)\s*:\s*(?<verse>\d+)\s*(-\s*(?<verseRange>\d+))?";
+        const string regex =
+            @"(?<book>\d*\s*\w+)\s*(?<chapter>\d+)\s*(:\s*(?<verse>\d+))?\s*(-\s*(?<verseRange>\d+))?";
 
         Match match;
 
@@ -53,19 +54,18 @@ public class InputParser
 
         var parsedArguments = SplitInput();
 
+        int? verse = null;
         int? verseRange = null;
 
-        try
-        {
-            verseRange = int.Parse(parsedArguments["verseRange"]);
-        }
-        catch (Exception)
-        { }
+        int temp;
+
+        if (int.TryParse(parsedArguments["verse"], out temp)) verse = temp;
+        if (int.TryParse(parsedArguments["verseRange"], out temp)) verseRange = temp;
 
         return new BiblicalIndex(
             parsedArguments["book"],
             int.Parse(parsedArguments["chapter"]),
-            int.Parse(parsedArguments["verse"]),
+            verse,
             verseRange
         );
     }
