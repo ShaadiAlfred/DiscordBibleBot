@@ -49,7 +49,7 @@ public class CSBibleKJV : IBibleVersion<CSBible.Book>
                 )
             );
 
-            sb.Append(' ');
+            sb.Append(" ");
         }
     }
 
@@ -72,7 +72,7 @@ public class CSBibleKJV : IBibleVersion<CSBible.Book>
         {
             sb.Append(SuperscriptNumbers.ParseFrom(verseNumber));
             sb.Append(chapter[verseNumber]);
-            sb.Append(' ');
+            sb.Append(" ");
         }
     }
 }
