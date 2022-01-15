@@ -62,7 +62,7 @@ jobs:
             release_name="BibleDiscordBot-$tag-${{ matrix.target }}"
 
             # Build everything
-            dotnet publish -p:PublishSingleFile=true -p:UseAppHost=true --runtime "${{ matrix.target }}" --self-contained true -c Release -o "$release_name"
+            dotnet publish -p:PublishSingleFile=true -p:UseAppHost=true --runtime ${{ matrix.target }} --self-contained true -c Release -o "$release_name"
 
             # Pack files
             if [ "${{ matrix.target }}" == "win-x64" ]; then
