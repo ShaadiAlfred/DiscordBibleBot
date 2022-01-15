@@ -29,5 +29,5 @@ jobs:
         run: dotnet test --no-build --verbosity normal
         
       - name: Setup .NET Core SDK
-      - run: dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained false
+        run: dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained false
 
