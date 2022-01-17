@@ -81,7 +81,7 @@ jobs:
         - name: Publish
           uses: softprops/action-gh-release@v1
           with:
-            tag_name: "DiscordBibleBot-v${{ steps.get_version.outputs.release_tag }}-${{ matrix.kind }}"
+            tag_name: "DiscordBibleBot-v${{ steps.get_version.outputs.version }}-${{ matrix.kind }}"
             files: "BibleDiscordBot*"
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
