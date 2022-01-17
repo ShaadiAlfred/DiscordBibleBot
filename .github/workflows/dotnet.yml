@@ -73,15 +73,11 @@ jobs:
 
             # Delete output directory
             rm -r "$release_name"
-            
-        - name: Get latest release version number
-          id: get_version
-          uses: battila7/get-version-action@v2
           
         - name: Publish
           uses: softprops/action-gh-release@v1
           with:
-            tag_name: "DiscordBibleBot-${{ steps.get_version.outputs.version }}-${{ matrix.kind }}"
+            tag_name: "DiscordBibleBot-${{ github.ref }}-${{ matrix.kind }}"
             files: "BibleDiscordBot*"
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
