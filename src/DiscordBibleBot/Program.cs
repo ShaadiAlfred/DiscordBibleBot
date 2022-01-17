@@ -4,7 +4,7 @@ using DSharpPlus;
 using Interfaces;
 using Utils;
 
-DotEnv.Load(new DotEnvOptions(ignoreExceptions: false));
+DotEnv.Load();
 
 CancellationTokenSource cts = new();
 
@@ -16,12 +16,12 @@ Console.CancelKeyPress += (sender, args) =>
 
 var client = new DiscordClient(new DiscordConfiguration()
 {
-    Token = DotEnv.Read()["DISCORD_TOKEN"],
+    Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN"),
     TokenType = TokenType.Bot,
     Intents = DiscordIntents.AllUnprivileged
 });
 
-string PREFIX = DotEnv.Read()["PREFIX"];
+string PREFIX = Environment.GetEnvironmentVariable("PREFIX") ?? string.Empty;
 
 client.MessageCreated += async (client, args) =>
 {
