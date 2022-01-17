@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Interfaces;
 using CSBible;
 using System.Text;
@@ -24,7 +25,16 @@ public class CSBibleKJV : IBibleVersion<CSBible.Book>
             AppendVerseRange(iBiblicalIndex);
         }
 
-        sb.Append($" [{iBiblicalIndex}]");
+        sb.Append($"{Environment.NewLine}[{iBiblicalIndex}]");
+
+        // Fix ~, and new line characters showing up when running on Linux
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            sb
+                .Replace("\r\n", "\n")
+                .Replace("\r", string.Empty)
+                .Replace("~", string.Empty);
+        }
 
         return sb.ToString();
     }
@@ -49,7 +59,7 @@ public class CSBibleKJV : IBibleVersion<CSBible.Book>
                 )
             );
 
-            sb.Append(" ");
+            sb.Append(' ');
         }
     }
 
@@ -72,7 +82,7 @@ public class CSBibleKJV : IBibleVersion<CSBible.Book>
         {
             sb.Append(SuperscriptNumbers.ParseFrom(verseNumber));
             sb.Append(chapter[verseNumber]);
-            sb.Append(" ");
+            sb.Append(' ');
         }
     }
 }
