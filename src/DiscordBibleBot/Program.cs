@@ -1,4 +1,4 @@
-﻿using BibleVersions;
+using BibleVersions;
 using dotenv.net;
 using DSharpPlus;
 using Interfaces;
