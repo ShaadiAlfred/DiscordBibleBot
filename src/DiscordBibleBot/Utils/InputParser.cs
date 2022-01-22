@@ -32,7 +32,7 @@ public class InputParser
     private Dictionary<string, string> SplitInput()
     {
         const string regex =
-            @"(?<book>\w*\s*\w+)\s*(?<chapter>\d+)\s*(:\s*(?<verse>\d+))?\s*(-\s*(?<verseRange>\d+))?";
+            @"(?<book>(\d(st|nd|rd|th)*)*\s*[a-zA-Z]+)\s*(?<chapter>\d+)\s*(:\s*(?<verse>\d+))?\s*(-\s*(?<verseRange>\d+))?";
 
         Match match;
 

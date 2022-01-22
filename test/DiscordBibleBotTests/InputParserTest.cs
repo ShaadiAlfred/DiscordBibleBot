@@ -63,6 +63,20 @@ public class InputParserTest
         Assert.Equal(1, parsedBiblicalIndex.Chapter);
         Assert.Equal(2, parsedBiblicalIndex.Verse);
         Assert.Equal(4, parsedBiblicalIndex.VerseRange);
+
+        inputParser = new("!b Ezekiel 15:2", "!b", abbreviations);
+        parsedBiblicalIndex = inputParser.Parse();
+        Assert.Equal("Ezekiel", parsedBiblicalIndex.BookTitle);
+        Assert.Equal(15, parsedBiblicalIndex.Chapter);
+        Assert.Equal(2, parsedBiblicalIndex.Verse);
+        Assert.Null(parsedBiblicalIndex.VerseRange);
+
+        inputParser = new("!b 1st cor 1:1-15", "!b", abbreviations);
+        parsedBiblicalIndex = inputParser.Parse();
+        Assert.Equal("1 Corinthians", parsedBiblicalIndex.BookTitle);
+        Assert.Equal(1, parsedBiblicalIndex.Chapter);
+        Assert.Equal(1, parsedBiblicalIndex.Verse);
+        Assert.Equal(15, parsedBiblicalIndex.VerseRange);
     }
 
     [Fact]
