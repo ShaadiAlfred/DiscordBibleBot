@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="..\..\DiscordBibleBot.Data\abbreviations.json" LinkBase="DiscordBibleBot.Data">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <ProjectReference Include="..\..\src\DiscordBibleBot\DiscordBibleBot.csproj" />
   </ItemGroup>
 

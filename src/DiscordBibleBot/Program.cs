@@ -23,6 +23,8 @@ var client = new DiscordClient(new DiscordConfiguration()
 
 string PREFIX = Environment.GetEnvironmentVariable("PREFIX") ?? string.Empty;
 
+var abbreviations = Abbreviation.GetAll();
+
 client.MessageCreated += async (client, args) =>
 {
     if (args.Author.IsCurrent)
@@ -30,7 +32,7 @@ client.MessageCreated += async (client, args) =>
         return;
     }
 
-    InputParser inputParser = new(args.Message.Content, PREFIX);
+    InputParser inputParser = new(args.Message.Content, PREFIX, abbreviations);
 
     try
     {

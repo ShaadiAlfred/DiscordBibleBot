@@ -12,6 +12,10 @@
     <PackageReference Include="CSBible" Version="2.1.0" />
     <PackageReference Include="dotenv.net" Version="3.1.1" />
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
+    <Content Include="../../DiscordBibleBot.Data/abbreviations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Data</Link>
+    </Content>
   </ItemGroup>
 
 </Project>

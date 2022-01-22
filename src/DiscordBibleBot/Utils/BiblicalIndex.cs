@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.RegularExpressions;
 using Interfaces;
 using CSBibleBook = CSBible.Book;
 
@@ -20,34 +18,7 @@ public class BiblicalIndex : IBiblicalIndex<CSBibleBook>
         this.Verse = verse;
         this.VerseRange = verseRange;
 
-        this.Normalize();
         this.SetCSBibleBook();
-    }
-
-    private void Normalize()
-    {
-        if (char.IsDigit(BookTitle[0]))
-        {
-            if (!char.IsWhiteSpace(BookTitle[1]))
-            {
-                this.BookTitle = BookTitle[0] + " " + BookTitle.Substring(1);
-                return;
-            }
-
-            this.BookTitle = Regex.Replace(this.BookTitle, @"\s\s+", " ");
-        }
-
-        this.BookTitle = string.Join(' ',
-            this.BookTitle
-            .ToLower()
-            .Split(' ')
-            .Select(str =>
-            {
-                StringBuilder sb = new(str);
-                sb[0] = char.ToUpper(sb[0]);
-                return sb.ToString();
-            })
-        );
     }
 
     public void SetCSBibleBook()
